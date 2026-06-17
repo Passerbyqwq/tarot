@@ -29,7 +29,7 @@ a{color:#c9a84c;text-decoration:none}
 /* ===== BOOK CONTAINER ===== */
 .book{
   position:fixed;inset:0;
-  perspective:1600px;
+  perspective:2000px;
   overflow:hidden;
 }
 .page{
@@ -39,27 +39,41 @@ a{color:#c9a84c;text-decoration:none}
   z-index:1;
   pointer-events:none;
   opacity:0;
-  transition:transform .7s cubic-bezier(.65,0,.35,1),opacity .5s ease;
+  transition:transform .8s cubic-bezier(.7,0,.3,1),opacity .5s ease;
   transform-origin:left center;
-  transform:translateX(60px) scale(.98);
+  transform:translateX(80px) scale(.95) rotateY(8deg);
+  will-change:transform,opacity;
 }
 .page.active{
   pointer-events:auto;
   opacity:1;
-  transform:translateX(0) scale(1);
+  transform:translateX(0) scale(1) rotateY(0);
   z-index:2;
 }
 .page.prev{
   opacity:0;
-  transform:translateX(-40px) scale(.97);
+  transform:translateX(-60px) scale(.93) rotateY(-5deg);
   z-index:1;
 }
-/* page curl shadow */
+/* page curl shadow - right side */
 .page.active::before{
-  content:'';position:absolute;top:0;left:-30px;width:30px;height:100%;
-  background:linear-gradient(to right,rgba(0,0,0,.4),transparent);
+  content:'';position:absolute;top:0;left:-35px;width:35px;height:100%;
+  background:linear-gradient(to right,rgba(0,0,0,.5),transparent);
   pointer-events:none;z-index:5;
 }
+/* page turning shadow - left side */
+.page.active::after{
+  content:'';position:absolute;top:0;right:-35px;width:35px;height:100%;
+  background:linear-gradient(to left,rgba(0,0,0,.15),transparent);
+  pointer-events:none;z-index:5;
+}
+/* subtle page edge */
+.page .page-inner::before{
+  content:'';position:absolute;top:0;left:0;width:4px;height:100%;
+  background:linear-gradient(to right,rgba(201,168,76,.08),transparent);
+  pointer-events:none;z-index:6;opacity:0;
+}
+.page.active .page-inner::before{opacity:1;transition:opacity .5s ease .3s}
 
 /* ===== PAGE INNER ===== */
 .page-inner{
@@ -207,77 +221,165 @@ a{color:#c9a84c;text-decoration:none}
   position:absolute;inset:0;border-radius:8px;
   backface-visibility:hidden;overflow:hidden;
 }
-/* ===== CARD BACK (ornate) ===== */
+/* ===== CARD BACK (ornate tarot design) ===== */
 .cards-fan .fan-card .fc-back{
-  background:linear-gradient(145deg,#1a0a2e,#2d1b69);
-  border:2px solid rgba(201,168,76,.3);
-  box-shadow:0 4px 16px rgba(0,0,0,.5),inset 0 0 60px rgba(201,168,76,.05);
+  background:linear-gradient(135deg,#120820,#1e0d3a,#2a1550,#1e0d3a,#120820);
+  border:2px solid rgba(201,168,76,.35);
+  box-shadow:0 4px 16px rgba(0,0,0,.5),inset 0 0 80px rgba(201,168,76,.04);
   display:flex;align-items:center;justify-content:center;
 }
+/* Diamond lattice patterned background */
+.fc-back::before{
+  content:'';position:absolute;inset:0;
+  background:
+    repeating-linear-gradient(45deg,transparent,transparent 8px,rgba(201,168,76,.025) 8px,rgba(201,168,76,.025) 9px),
+    repeating-linear-gradient(-45deg,transparent,transparent 8px,rgba(201,168,76,.025) 8px,rgba(201,168,76,.025) 9px);
+  pointer-events:none;
+}
 .fc-back-pattern{
-  position:absolute;inset:6px;
-  border:1px solid rgba(201,168,76,.12);
+  position:absolute;inset:5px;
+  border:1.5px solid rgba(201,168,76,var(--ba,.15));
   border-radius:5px;pointer-events:none;
 }
 .fc-back-pattern2{
-  position:absolute;inset:12px;
-  border:1px solid rgba(201,168,76,.08);
+  position:absolute;inset:11px;
+  border:1px solid rgba(201,168,76,var(--ba,.1));
   border-radius:3px;pointer-events:none;
 }
-.fc-back-ornament{
-  position:relative;width:50px;height:50px;
-  border-radius:50%;
-  border:2px solid rgba(201,168,76,.2);
-  display:flex;align-items:center;justify-content:center;
-  background:radial-gradient(circle,rgba(201,168,76,.08),transparent);
-}
-.fc-back-ornament::before{content:'✦';font-size:22px;color:rgba(201,168,76,.25)}
-.fc-back-ornament::after{
-  content:'';position:absolute;inset:-6px;
-  border:1px solid rgba(201,168,76,.1);border-radius:50%;
-}
+/* Ornate corner flourishes */
 .fc-back-corner{
-  position:absolute;width:14px;height:14px;
-  border-color:rgba(201,168,76,.15);border-style:solid;
+  position:absolute;width:18px;height:18px;
   pointer-events:none;
 }
-.fc-back-corner.tl{top:6px;left:6px;border-width:1px 0 0 1px;border-radius:3px 0 0 0}
-.fc-back-corner.tr{top:6px;right:6px;border-width:1px 1px 0 0;border-radius:0 3px 0 0}
-.fc-back-corner.bl{bottom:6px;left:6px;border-width:0 0 1px 1px;border-radius:0 0 0 3px}
-.fc-back-corner.br{bottom:6px;right:6px;border-width:0 1px 1px 0;border-radius:0 0 3px 0}
-/* ===== CARD FRONT ===== */
+.fc-back-corner::before,.fc-back-corner::after{
+  content:'';position:absolute;background:rgba(201,168,76,.13);
+}
+.fc-back-corner.tl{top:5px;left:5px}
+.fc-back-corner.tl::before{top:0;left:0;width:12px;height:1px;border-radius:0 1px 1px 0}
+.fc-back-corner.tl::after{top:0;left:0;width:1px;height:12px;border-radius:0 0 1px 1px}
+.fc-back-corner.tr{top:5px;right:5px}
+.fc-back-corner.tr::before{top:0;right:0;width:12px;height:1px;border-radius:1px 0 0 1px}
+.fc-back-corner.tr::after{top:0;right:0;width:1px;height:12px;border-radius:0 0 1px 1px}
+.fc-back-corner.bl{bottom:5px;left:5px}
+.fc-back-corner.bl::before{bottom:0;left:0;width:12px;height:1px;border-radius:0 1px 1px 0}
+.fc-back-corner.bl::after{bottom:0;left:0;width:1px;height:12px;border-radius:1px 1px 0 0}
+.fc-back-corner.br{bottom:5px;right:5px}
+.fc-back-corner.br::before{bottom:0;right:0;width:12px;height:1px;border-radius:1px 0 0 1px}
+.fc-back-corner.br::after{bottom:0;right:0;width:1px;height:12px;border-radius:1px 1px 0 0}
+/* Central medallion */
+.fc-back-ornament{
+  position:relative;width:44px;height:44px;
+  border-radius:50%;
+  border:1.5px solid rgba(201,168,76,.2);
+  display:flex;align-items:center;justify-content:center;
+  background:radial-gradient(circle,rgba(201,168,76,.06) 0%,transparent 70%);
+  z-index:2;
+}
+.fc-back-ornament::before{
+  content:'✧';font-size:20px;color:rgba(201,168,76,.3);
+  text-shadow:0 0 8px rgba(201,168,76,.15);
+}
+/* Outer ring */
+.fc-back-ornament::after{
+  content:'';position:absolute;inset:-5px;
+  border:1px solid rgba(201,168,76,.1);
+  border-radius:50%;
+}
+/* Inner decorative dots around medallion */
+.fc-back-dots{
+  position:absolute;width:56px;height:56px;
+  border-radius:50%;pointer-events:none;z-index:1;
+  background:radial-gradient(circle at 50% 0,rgba(201,168,76,.08) 1px,transparent 1px),
+    radial-gradient(circle at 50% 100%,rgba(201,168,76,.08) 1px,transparent 1px),
+    radial-gradient(circle at 0 50%,rgba(201,168,76,.08) 1px,transparent 1px),
+    radial-gradient(circle at 100% 50%,rgba(201,168,76,.08) 1px,transparent 1px),
+    radial-gradient(circle at 35% 35%,rgba(201,168,76,.06) 1px,transparent 1px),
+    radial-gradient(circle at 65% 65%,rgba(201,168,76,.06) 1px,transparent 1px),
+    radial-gradient(circle at 35% 65%,rgba(201,168,76,.06) 1px,transparent 1px),
+    radial-gradient(circle at 65% 35%,rgba(201,168,76,.06) 1px,transparent 1px);
+}
+/* ===== CARD FRONT — Real Tarot Card Style ===== */
 .cards-fan .fan-card .fc-front{
-  background:linear-gradient(135deg,#0f0a1e,#1a0a2e);
-  border:2px solid #c9a84c;transform:rotateY(180deg);
-  box-shadow:0 4px 20px rgba(201,168,76,.12);
+  background:linear-gradient(145deg,#f5eee0,#e8dcc8,#f0e6d0);
+  border:2.5px solid #b8942e;transform:rotateY(180deg);
+  box-shadow:0 4px 20px rgba(0,0,0,.3),inset 0 0 30px rgba(180,140,50,.06);
   display:flex;flex-direction:column;align-items:center;justify-content:center;
-  padding:8px 6px;
+  padding:6px 5px;
+}
+/* Outer border (gold frame) */
+.fc-front::before{
+  content:'';position:absolute;inset:3px;
+  border:1.5px solid rgba(184,148,46,.2);
+  border-radius:6px;pointer-events:none;
+}
+/* Inner border */
+.fc-front::after{
+  content:'';position:absolute;inset:6px;
+  border:1px solid rgba(184,148,46,.1);
+  border-radius:4px;pointer-events:none;
+}
+/* Corner diamonds */
+.fc-front-diamond{
+  position:absolute;width:8px;height:8px;
+  transform:rotate(45deg);
+  background:rgba(184,148,46,.15);
+  pointer-events:none;z-index:2;
+}
+.fc-front-diamond.tl{top:9px;left:9px}
+.fc-front-diamond.tr{top:9px;right:9px}
+.fc-front-diamond.bl{bottom:9px;left:9px}
+.fc-front-diamond.br{bottom:9px;right:9px}
+/* Element-based top accent bar */
+.fc-front-accent{
+  position:absolute;top:0;left:15%;right:15%;height:4px;
+  border-radius:0 0 3px 3px;pointer-events:none;
+  box-shadow:0 1px 4px rgba(0,0,0,.1);
+}
+/* Element-based bottom accent bar */
+.fc-front-accent-b{
+  position:absolute;bottom:0;left:15%;right:15%;height:4px;
+  border-radius:3px 3px 0 0;pointer-events:none;
+  box-shadow:0 -1px 4px rgba(0,0,0,.1);
 }
 .fc-num{
   font-family:'Cinzel Decorative',serif;
-  font-size:11px;color:rgba(201,168,76,.5);
-  position:absolute;top:6px;left:8px;
+  font-size:10px;color:#7a6230;font-weight:700;
+  position:absolute;top:10px;left:10px;z-index:1;
 }
 .fc-num-b{
   font-family:'Cinzel Decorative',serif;
-  font-size:11px;color:rgba(201,168,76,.5);
-  position:absolute;bottom:6px;right:8px;transform:rotate(180deg);
+  font-size:10px;color:#7a6230;font-weight:700;
+  position:absolute;bottom:10px;right:10px;transform:rotate(180deg);z-index:1;
 }
-.fc-symbol{font-size:28px;margin-bottom:2px}
+/* Central symbol area */
+.fc-symbol{
+  font-size:30px;margin-bottom:1px;
+  filter:drop-shadow(0 1px 2px rgba(0,0,0,.1));
+  z-index:1;
+}
+/* Element badge */
+.fc-el-badge{
+  position:absolute;top:10px;right:10px;
+  font-size:8px;color:rgba(122,98,48,.3);
+  font-family:'Cinzel Decorative',serif;z-index:1;
+}
 .fc-name-en{
   font-family:'Cinzel Decorative',serif;
-  font-size:8px;color:#c9a84c;letter-spacing:.5px;
-  text-align:center;line-height:1.2;
+  font-size:7px;color:#7a6230;font-weight:600;
+  letter-spacing:.8px;text-align:center;line-height:1.2;
+  text-transform:uppercase;z-index:1;
 }
 .fc-name-cn{
   font-family:'Cormorant Garamond',serif;
-  font-size:14px;color:#f0d68a;margin-top:1px;
+  font-size:15px;color:#4a3520;font-weight:700;
+  margin-top:1px;z-index:1;
 }
-.fc-element{font-size:8px;color:rgba(201,168,76,.3);position:absolute;bottom:6px;left:8px}
 .fc-rev-badge{
-  position:absolute;top:6px;right:6px;
-  font-size:8px;color:#b088c0;letter-spacing:1px;
-  font-family:'Cinzel Decorative',serif;
+  position:absolute;top:24px;right:8px;
+  font-size:9px;color:#8a4a6a;letter-spacing:1px;
+  font-family:'Cinzel Decorative',serif;z-index:1;
+  background:rgba(180,100,140,.08);padding:1px 5px;border-radius:4px;
+  border:1px solid rgba(180,100,140,.15);
 }
 /* selected state */
 .cards-fan .fan-card.selected:not(.flipped) .fc-back{
@@ -298,9 +400,25 @@ a{color:#c9a84c;text-decoration:none}
 .sparkle-container{position:absolute;inset:0;pointer-events:none;z-index:20}
 .sparkle{
   position:absolute;width:4px;height:4px;border-radius:50%;
-  background:#f0d68a;pointer-events:none;
+  pointer-events:none;
   animation:sparkleFloat 1.2s ease-out forwards;
-  box-shadow:0 0 6px #f0d68a;
+}
+.sparkle-gold{background:#f0d68a;box-shadow:0 0 6px #f0d68a}
+.sparkle-purple{background:#b088d0;box-shadow:0 0 6px #b088d0}
+.sparkle-white{background:#ffffff;box-shadow:0 0 6px rgba(255,255,255,.4)}
+
+/* floating mystical dust */
+.magic-dust{position:fixed;width:3px;height:3px;border-radius:50%;
+  pointer-events:none;z-index:0;
+  background:rgba(201,168,76,.15);
+  box-shadow:0 0 4px rgba(201,168,76,.1);
+  animation:dustFloat linear infinite;
+}
+@keyframes dustFloat{
+  0%{opacity:0;transform:translateY(0) translateX(0) scale(1)}
+  20%{opacity:1}
+  80%{opacity:.3}
+  100%{opacity:0;transform:translateY(var(--dy, -120px)) translateX(var(--dx, 30px)) scale(0)}
 }
 
 /* ===== SELECTED CARDS PREVIEW ===== */
@@ -338,22 +456,43 @@ a{color:#c9a84c;text-decoration:none}
 }
 .result-card-item .rc-card{
   width:150px;height:225px;border-radius:10px;margin:0 auto 10px;
-  background:linear-gradient(145deg,#0f0a1e,#1a0a2e);
-  border:1px solid rgba(201,168,76,.25);
+  background:linear-gradient(145deg,#f5eee0,#e8dcc8);
+  border:2px solid #b8942e;
   display:flex;flex-direction:column;align-items:center;justify-content:center;
-  padding:12px;position:relative;
-  box-shadow:0 8px 32px rgba(0,0,0,.4);
+  padding:10px;position:relative;
+  box-shadow:0 8px 32px rgba(0,0,0,.4),inset 0 0 30px rgba(180,140,50,.04);
+}
+.result-card-item .rc-card::before{
+  content:'';position:absolute;inset:3px;
+  border:1.5px solid rgba(184,148,46,.18);border-radius:8px;pointer-events:none;
+}
+.result-card-item .rc-card::after{
+  content:'';position:absolute;inset:6px;
+  border:1px solid rgba(184,148,46,.08);border-radius:5px;pointer-events:none;
+}
+.result-card-item .rc-card .rc-accent{
+  position:absolute;top:0;left:20%;right:20%;height:4px;
+  border-radius:0 0 3px 3px;pointer-events:none;
+  box-shadow:0 1px 4px rgba(0,0,0,.08);
+}
+.result-card-item .rc-card .rc-accent-b{
+  position:absolute;bottom:0;left:20%;right:20%;height:4px;
+  border-radius:3px 3px 0 0;pointer-events:none;
+  box-shadow:0 -1px 4px rgba(0,0,0,.08);
 }
 .result-card-item .rc-card .rc-num{
-  font-family:'Cinzel Decorative',serif;font-size:11px;color:rgba(201,168,76,.4);
+  font-family:'Cinzel Decorative',serif;font-size:11px;color:#7a6230;font-weight:700;
   position:absolute;top:8px;left:10px;
 }
-.result-card-item .rc-card .rc-symbol{font-size:32px;margin-bottom:4px}
+.result-card-item .rc-card .rc-symbol{font-size:34px;margin-bottom:4px;z-index:1;
+  filter:drop-shadow(0 1px 2px rgba(0,0,0,.08))}
 .result-card-item .rc-card .rc-name-en{
-  font-family:'Cinzel Decorative',serif;font-size:11px;color:#c9a84c;line-height:1.2;
+  font-family:'Cinzel Decorative',serif;font-size:10px;color:#7a6230;font-weight:600;
+  line-height:1.2;letter-spacing:.5px;z-index:1;
 }
 .result-card-item .rc-card .rc-name-cn{
-  font-size:16px;color:#f0d68a;font-family:'Cormorant Garamond',serif;margin-top:2px;
+  font-size:15px;color:#4a3520;font-weight:700;
+  font-family:'Cormorant Garamond',serif;margin-top:1px;z-index:1;
 }
 .result-card-item .rc-pos{
   font-family:'Cinzel Decorative',serif;font-size:11px;
@@ -361,6 +500,18 @@ a{color:#c9a84c;text-decoration:none}
 }
 .result-card-item .rc-orient{
   font-size:11px;color:rgba(232,224,212,.4);margin-top:2px;
+}
+.result-card-item .rc-orient-badge{
+  display:inline-block;padding:2px 10px;border-radius:20px;
+  font-size:10px;letter-spacing:1px;margin-top:4px;
+}
+.result-card-item .rc-orient-badge.upright{
+  background:rgba(201,168,76,.1);color:#c9a84c;
+  border:1px solid rgba(201,168,76,.15);
+}
+.result-card-item .rc-orient-badge.reversed{
+  background:rgba(180,136,192,.1);color:#b088c0;
+  border:1px solid rgba(180,136,192,.15);
 }
 
 /* ===== READING CONTENT ===== */
@@ -731,9 +882,9 @@ a{color:#c9a84c;text-decoration:none}
 
       <!-- Preview slots -->
       <div class="selected-preview" id="selPreview">
-        <div class="sel-slot"><div class="sel-label">🌙 过去</div><div class="sel-placeholder" id="slot-past">?</div></div>
-        <div class="sel-slot"><div class="sel-label">☀️ 现在</div><div class="sel-placeholder" id="slot-present">?</div></div>
-        <div class="sel-slot"><div class="sel-label">⭐ 未来</div><div class="sel-placeholder" id="slot-future">?</div></div>
+        <div class="sel-slot"><div class="sel-label">① 选择</div><div class="sel-placeholder" id="slot-0">?</div></div>
+        <div class="sel-slot"><div class="sel-label">② 选择</div><div class="sel-placeholder" id="slot-1">?</div></div>
+        <div class="sel-slot"><div class="sel-label">③ 选择</div><div class="sel-placeholder" id="slot-2">?</div></div>
       </div>
 
       <!-- Fan of cards -->
@@ -952,6 +1103,7 @@ const S = {
   page: 0,
   cards: [],       // fan cards (12)
   chosen: [],      // {card, reversed, pos}
+  confirming: false,
   userName: '',
   topic: 'general',
   question: '',
@@ -985,6 +1137,10 @@ window.addEventListener('resize',()=>{resizeCvs();initStars()});
 // ============================================================
 // PAGE NAVIGATION (book flip)
 // ============================================================
+function elColor(el){
+  const m={'火':'#e06030','水':'#3060c0','风':'#80c040','土':'#c09040'};
+  return m[el]||'#c9a84c';
+}
 function turnTo(target){
   const pages=document.querySelectorAll('.page');
   pages.forEach(p=>{p.classList.remove('active','prev')});
@@ -1033,6 +1189,14 @@ function startShuffle(){
   S.spreadType=document.getElementById('spreadType').value;
   S.question=document.getElementById('userQuestion').value.trim();
   S.chosen=[];
+  S.confirming=false;
+
+  // Reset confirm button state
+  const btn=document.getElementById('confirmBtn');
+  btn.disabled=true;
+  btn.style.opacity='.4';
+  btn.textContent='✦ 揭示命运';
+  btn.classList.remove('animate-glow');
 
   turnTo(2);
   setTimeout(initFan,400);
@@ -1052,9 +1216,9 @@ function initFan(){
     document.getElementById('selTitle').textContent='集中精神，选择你的三张牌';
     document.getElementById('selSub').textContent='在心中默念问题，从展开的牌中挑选三张';
     document.getElementById('selPreview').style.display='flex';
-    document.getElementById('slot-past').textContent='?';
-    document.getElementById('slot-present').textContent='?';
-    document.getElementById('slot-future').textContent='?';
+    document.getElementById('slot-0').textContent='?';
+    document.getElementById('slot-1').textContent='?';
+    document.getElementById('slot-2').textContent='?';
   }
 
   // Pick 12 random cards
@@ -1091,16 +1255,23 @@ function initFan(){
             <div class="fc-back-corner bl"></div><div class="fc-back-corner br"></div>
             <div class="fc-back-pattern"></div>
             <div class="fc-back-pattern2"></div>
+            <div class="fc-back-dots"></div>
             <div class="fc-back-ornament"></div>
           </div>
           <div class="fc-face fc-front">
+            <div class="fc-front-accent" style="background:${elColor(card.el)}"></div>
+            <div class="fc-front-accent-b" style="background:${elColor(card.el)}"></div>
+            <div class="fc-front-diamond tl"></div>
+            <div class="fc-front-diamond tr"></div>
+            <div class="fc-front-diamond bl"></div>
+            <div class="fc-front-diamond br"></div>
             <div class="fc-num">${card.num}</div>
             <div class="fc-symbol">${card.sym}</div>
             <div class="fc-name-en">${card.name}</div>
             <div class="fc-name-cn">${card.cn}</div>
-            <div class="fc-element">${card.el}</div>
+            <div class="fc-el-badge">${card.el}</div>
             <div class="fc-num-b">${card.num}</div>
-            ${card.reversed?'<div class="fc-rev-badge">↕</div>':''}
+            ${card.reversed?'<div class="fc-rev-badge">↕ 逆位</div>':''}
           </div>
         </div>
       </div>`;
@@ -1127,36 +1298,63 @@ function initFan(){
 }
 
 // ============================================================
-// SHUFFLE ANIMATION
+// SHUFFLE ANIMATION — gather → mix → spread
 // ============================================================
 function doShuffleAnimation(){
   const wrappers=document.querySelectorAll('.fan-card-wrapper');
-  let rounds=0;
-  const maxRounds=4;
+  if(!wrappers.length)return;
 
-  function shuffleRound(){
-    if(rounds>=maxRounds){
-      wrappers.forEach(w=>{
-        w.style.transition='all .5s ease';
-        w.style.setProperty('--rot',(Math.random()*4-2)+'deg');
-        w.style.setProperty('--yoff',(Math.random()*6-3)+'px');
-      });
-      return;
-    }
-    wrappers.forEach((w,i)=>{
-      w.style.transition=`all .2s ease`;
-      const x=(Math.random()*30-15);
-      const y=(Math.random()*20-10);
-      const r=Math.random()*8-4;
-      w.style.transform=`translate(${x}px,${y}px) rotate(${r}deg)`;
+  // Save each card's original position relative to the fan
+  const fan=document.getElementById('cardsFan');
+  const fanR=fan.getBoundingClientRect();
+  const cx=fanR.width/2, cy=fanR.height/2;
+  const orig=[];
+
+  wrappers.forEach(w=>{
+    const r=w.querySelector('.fan-card').getBoundingClientRect();
+    orig.push({
+      cx:r.left+r.width/2-fanR.left,
+      cy:r.top+r.height/2-fanR.top
     });
-    rounds++;
+  });
+
+  // Step 1: GATHER all cards to the center
+  wrappers.forEach((w,i)=>{
     setTimeout(()=>{
-      wrappers.forEach(w=>{w.style.transform='translate(0,0) rotate(var(--rot))'});
-      setTimeout(shuffleRound,150);
-    },200);
-  }
-  shuffleRound();
+      w.style.transition='all .35s cubic-bezier(.4,0,.2,1)';
+      const dx=cx-orig[i].cx, dy=cy-orig[i].cy-10;
+      w.style.zIndex=10;
+      w.style.transform=`translate(${dx}px,${dy}px) rotate(0deg)`;
+    },i*35);
+  });
+
+  // Step 2: SHUFFLE (riffle simulation inside the stack)
+  setTimeout(()=>{
+    let round=0;
+    const max=6;
+    function riffle(){
+      if(round>=max){
+        // Step 3: SPREAD back to original positions
+        wrappers.forEach((w,i)=>{
+          setTimeout(()=>{
+            w.style.transition='all .4s cubic-bezier(.4,.2,.2,1)';
+            w.style.zIndex='';
+            w.style.transform='translate(0,0) rotate(var(--rot))';
+          },i*30);
+        });
+        return;
+      }
+      wrappers.forEach((w,i)=>{
+        w.style.transition='all .1s ease';
+        const ox=(Math.random()-.5)*22, oy=(Math.random()-.5)*16;
+        const dx=cx-orig[i].cx+ox, dy=cy-orig[i].cy-10+oy;
+        w.style.transform=`translate(${dx}px,${dy}px) rotate(${(Math.random()-.5)*6}deg)`;
+      });
+      round++;
+      setTimeout(riffle,115);
+    }
+    riffle();
+  }, orig.length*35+350);
 }
 
 // ============================================================
@@ -1168,12 +1366,11 @@ function pickCard(el){
   const isSingle=S.spreadType==='single';
   const max=isSingle?1:3;
 
-  // Check if already selected
-  if(el.classList.contains('flipped')) return;
+  // Already flipped or confirming — no changes allowed
+  if(el.classList.contains('flipped')||S.confirming) return;
 
-  // Check if already chosen
+  // Check if already chosen → deselect
   if(el.classList.contains('selected')){
-    // Deselect
     el.classList.remove('selected');
     S.chosen=S.chosen.filter(c=>c.cardIdx!==idx);
     updateSlots();
@@ -1198,13 +1395,6 @@ function pickCard(el){
   createSparkles(el);
 
   if(S.chosen.length===max){
-    // Assign positions
-    if(isSingle){
-      S.chosen[0].pos=POS[1];
-    } else {
-      // Assign past/present/future based on selection order
-      S.chosen.forEach((c,i)=>{c.pos=POS[i]});
-    }
     document.getElementById('confirmBtn').disabled=false;
     document.getElementById('confirmBtn').style.opacity='1';
     document.getElementById('fanHint').textContent='✨ 已选好，点击揭示命运';
@@ -1217,43 +1407,65 @@ function updateSlots(){
   const isSingle=S.spreadType==='single';
   if(isSingle) return;
 
-  const slots=['slot-past','slot-present','slot-future'];
-  slots.forEach(id=>{
-    const el=document.getElementById(id);
-    const idx=slots.indexOf(id);
-    if(S.chosen[idx]){
-      el.textContent=S.chosen[idx].card.sym;
+  for(let i=0;i<3;i++){
+    const el=document.getElementById('slot-'+i);
+    if(!el)continue;
+    if(S.chosen[i]){
+      el.textContent=S.chosen[i].card.sym;
       el.classList.add('filled');
     } else {
       el.textContent='?';
       el.classList.remove('filled');
     }
-  });
+  }
 }
 
 // ============================================================
 // SPARKLE EFFECT
 // ============================================================
-function createSparkles(el){
+const SPARKLE_COLORS=['sparkle-gold','sparkle-purple','sparkle-white'];
+function createSparkles(el,count=14){
+  const container=document.getElementById('sparkleContainer');
+  const fanRect=document.getElementById('cardsFan').getBoundingClientRect();
   const rect=el.getBoundingClientRect();
   const cx=rect.left+rect.width/2;
   const cy=rect.top+rect.height/2;
-  const container=document.getElementById('sparkleContainer');
 
-  for(let i=0;i<12;i++){
+  for(let i=0;i<count;i++){
     const sp=document.createElement('div');
-    sp.className='sparkle';
+    sp.className='sparkle '+SPARKLE_COLORS[i%3];
     const angle=Math.random()*Math.PI*2;
-    const dist=40+Math.random()*80;
+    const dist=30+Math.random()*90;
     sp.style.setProperty('--sx',Math.cos(angle)*dist+'px');
     sp.style.setProperty('--sy',Math.sin(angle)*dist+'px');
-    sp.style.left=(rect.left-rect.parentElement.getBoundingClientRect().left+rect.width/2)+'px';
-    sp.style.top=(rect.top-rect.parentElement.getBoundingClientRect().top+rect.height/2)+'px';
-    sp.style.width=(2+Math.random()*3)+'px';
+    sp.style.left=(cx-fanRect.left)+'px';
+    sp.style.top=(cy-fanRect.top)+'px';
+    sp.style.width=(2+Math.random()*4)+'px';
     sp.style.height=sp.style.width;
-    sp.style.animationDelay=(Math.random()*.4)+'s';
+    sp.style.animationDelay=(Math.random()*.35)+'s';
     container.appendChild(sp);
     setTimeout(()=>sp.remove(),1600);
+  }
+}
+
+// ============================================================
+// MAGIC DUST (ambient floating particles)
+// ============================================================
+let dustInit=false;
+function initMagicDust(){
+  if(dustInit)return;dustInit=true;
+  for(let i=0;i<20;i++){
+    const d=document.createElement('div');
+    d.className='magic-dust';
+    d.style.left=(Math.random()*100)+'vw';
+    d.style.top=(Math.random()*100)+'vh';
+    d.style.setProperty('--dy',-(50+Math.random()*100)+'px');
+    d.style.setProperty('--dx',(Math.random()*40-20)+'px');
+    d.style.animationDuration=(6+Math.random()*8)+'s';
+    d.style.animationDelay=(Math.random()*10)+'s';
+    d.style.width=(2+Math.random()*2)+'px';
+    d.style.height=d.style.width;
+    document.body.appendChild(d);
   }
 }
 
@@ -1265,31 +1477,25 @@ async function confirmCards(){
   btn.disabled=true;
   btn.textContent='🔮 解读中...';
 
-  // Magical vanish: non-selected cards fade away
+  // Lock selection — no more changes
+  S.confirming=true;
+
+  // Assign positions based on selection order
+  const isSingle=S.spreadType==='single';
+  if(isSingle){
+    S.chosen[0].pos=POS[1]; // present
+  } else {
+    S.chosen.forEach((c,i)=>{c.pos=POS[i]});
+  }
+
+  // Vanish non-selected cards, flip selected ones
   const wrappers=document.querySelectorAll('.fan-card-wrapper');
-  wrappers.forEach((w,i)=>{
+  wrappers.forEach(w=>{
     const fc=w.querySelector('.fan-card');
     if(!fc.classList.contains('selected')){
-      // Create vanish sparkles
-      const rect=fc.getBoundingClientRect();
-      const container=document.getElementById('sparkleContainer');
-      for(let j=0;j<6;j++){
-        const sp=document.createElement('div');
-        sp.className='sparkle';
-        const angle=Math.random()*Math.PI*2;
-        const dist=30+Math.random()*60;
-        sp.style.setProperty('--sx',Math.cos(angle)*dist+'px');
-        sp.style.setProperty('--sy',Math.sin(angle)*dist+'px');
-        sp.style.left=(rect.left-rect.parentElement.getBoundingClientRect().left+rect.width/2)+'px';
-        sp.style.top=(rect.top-rect.parentElement.getBoundingClientRect().top+rect.height/2)+'px';
-        container.appendChild(sp);
-        setTimeout(()=>sp.remove(),1600);
-      }
-
       fc.classList.add('vanish');
       setTimeout(()=>{w.style.display='none'},500);
     } else {
-      // Animate selected cards: lift up and flip
       fc.style.transition='transform .6s cubic-bezier(.4,0,.2,1),box-shadow .6s ease';
       fc.style.transform='translateY(-20px) scale(1.1)';
       setTimeout(()=>{
@@ -1301,34 +1507,44 @@ async function confirmCards(){
 
   showLoading('命运之轮正在转动...','AI 塔罗师正在解读');
 
-  try {
-    await new Promise(r=>setTimeout(r,1200)); // dramatic pause
+  // Safety — force results after 15s
+  const safety=setTimeout(()=>{
+    console.warn('[Tarot] safety fallback');
+    hideLoading();
+    try{
+      const fb=genBuiltinReading();
+      S.reading=fb; turnTo(3); displayReading(fb);
+    }catch(e){
+      showToast('加载超时，请刷新 🙏');
+      btn.disabled=false; btn.textContent='✦ 揭示命运';
+    }
+  },15000);
 
-    // Generate reading
+  try {
+    await new Promise(r=>setTimeout(r,1200));
+
     const tMap={love:'爱情',career:'事业',finance:'财富',health:'健康',family:'家庭',study:'学业',spirit:'灵性',general:'综合运势'};
     S.topicCn=tMap[S.topic]||'综合运势';
 
     let reading;
     if(S.aiMode==='deepseek'&&CFG.DEEPSEEK_KEY){
-      try{reading=await genAIReading();}catch(e){
-        console.error('AI error:',e);
-        showToast('AI 解读超时，使用内置解读');
-        reading=genBuiltinReading();
-      }
+      try{reading=await genAIReading();}
+      catch(e){console.error('[Tarot] AI fail:',e);showToast('AI 失效，使用内置解读');reading=genBuiltinReading();}
     } else {
       reading=genBuiltinReading();
     }
 
+    clearTimeout(safety);
     S.reading=reading;
     hideLoading();
     turnTo(3);
     setTimeout(()=>displayReading(reading),300);
   } catch(e){
+    clearTimeout(safety);
     hideLoading();
+    console.error('[Tarot] fatal:',e);
     showToast('解读出错，请重试 🙏');
-    console.error(e);
-    btn.disabled=false;
-    btn.textContent='✦ 揭示命运';
+    btn.disabled=false; btn.textContent='✦ 揭示命运';
   }
 }
 
@@ -1361,21 +1577,21 @@ function genBuiltinReading(){
     overall=`
       <div class="overall-box">
         <h4>🔮 单牌解读</h4>
-        <p>今日你的指引之牌是 <strong>${s.card.cn}（${s.card.name}）</strong>，${s.rev?'逆位':'正位'}呈现。</p>
+        <p>今日你的指引之牌是 <strong>${s.card.cn}（${s.card.name}）</strong>，${s.reversed?'逆位':'正位'}呈现。</p>
         <p>${s.card.desc}</p>
-        <p style="margin-top:10px;color:rgba(232,224,212,.55);font-size:13px">💡 建议：${getAdv(s.card,s.rev)}</p>
+        <p style="margin-top:10px;color:rgba(232,224,212,.55);font-size:13px">💡 建议：${getAdv(s.card,s.reversed)}</p>
       </div>`;
   } else {
     const names=S.chosen.map(s=>s.card.cn).join('、');
-    const revs=S.chosen.map(s=>s.rev?'逆位':'正位').join('、');
+    const revs=S.chosen.map(s=>s.reversed?'逆位':'正位').join('、');
     overall=`
       <div class="overall-box">
         <h4>🔮 三牌综合解读</h4>
         <p>你的牌阵：<strong>${names}</strong></p>
-        <p>从过去到未来的能量轨迹：${S.chosen.map(s=>`${s.card.cn}（${s.rev?'逆位':'正位'}）`).join(' → ')}</p>
+        <p>从过去到未来的能量轨迹：${S.chosen.map(s=>`${s.card.cn}（${s.reversed?'逆位':'正位'}）`).join(' → ')}</p>
         <p>在<strong>${S.topicCn}</strong>方面，这三张牌共同揭示的主题是：<strong>${getTheme(S.chosen)}</strong>。</p>
         <p>${getOverallAdv(S.chosen)}</p>
-        <p style="margin-top:10px;color:rgba(232,224,212,.55);font-size:13px">💡 核心建议：${getAdv(S.chosen[1].card,S.chosen[1].rev)}</p>
+        <p style="margin-top:10px;color:rgba(232,224,212,.55);font-size:13px">💡 核心建议：${getAdv(S.chosen[1].card,S.chosen[1].reversed)}</p>
       </div>`;
   }
 
@@ -1432,7 +1648,7 @@ function getOverallAdv(chosen){
 async function genAIReading(){
   const cardsDesc=S.chosen.map(s=>{
     const c=s.card;
-    return `${s.pos.label}位置（${s.pos.id}）：${c.cn}（${c.name}）- ${c.num}，${s.rev?'逆位':'正位'}。关键词：${c.kw.join('、')}。正位：${c.up}。逆位：${c.rev}`;
+    return `${s.pos.label}位置（${s.pos.id}）：${c.cn}（${c.name}）- ${c.num}，${s.reversed?'逆位':'正位'}。关键词：${c.kw.join('、')}。正位：${c.up}。逆位：${c.rev}`;
   }).join('\n');
   const q=S.question?`用户的问题：${S.question}`:'用户未提具体问题';
   const spreadDesc=S.spreadType==='single'?'单张日运牌':'三牌阵（过去-现在-未来）';
@@ -1444,13 +1660,16 @@ async function genAIReading(){
 2. 温暖、鼓励且真实
 3. 结合${S.topicCn}主题进行针对性解读
 4. 给出可操作的建议
-5. 用中文回复，语言优美
+5. 用中文回复，语言精简
+6. 整篇解读请控制在600字以内
 
 请给出：
-1. 每张牌在各自位置的详细解读
+1. 每张牌在各自位置的简短解读（2-3句话）
 2. 牌阵整体分析和能量联系
 3. 针对${S.topicCn}的具体指引
-4. 给用户的建议和提醒`;
+4. 给用户的简短建议
+
+注意：不要重复卡牌基本信息，只说最核心的洞见和建议，总字数不超过600字。`;
 
   const userPrompt=`请为以下塔罗占卜进行解读：
 
@@ -1463,23 +1682,31 @@ ${cardsDesc}
 
 请给出完整解读。`;
 
-  const resp=await fetch(CFG.DEEPSEEK_URL,{
-    method:'POST',
-    headers:{'Content-Type':'application/json','Authorization':`Bearer ${CFG.DEEPSEEK_KEY}`},
-    body:JSON.stringify({
-      model:CFG.DEEPSEEK_MODEL,
-      messages:[{role:'system',content:sysPrompt},{role:'user',content:userPrompt}],
-      temperature:.8,max_tokens:2000
-    })
-  });
+  // 8-second timeout for DeepSeek API
+  const ac=new AbortController();
+  const timeoutId=setTimeout(()=>ac.abort(),8000);
+
+  let resp;
+  try{
+    resp=await fetch(CFG.DEEPSEEK_URL,{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':`Bearer ${CFG.DEEPSEEK_KEY}`},
+      body:JSON.stringify({
+        model:CFG.DEEPSEEK_MODEL,
+        messages:[{role:'system',content:sysPrompt},{role:'user',content:userPrompt}],
+        temperature:.7,max_tokens:800
+      }),
+      signal:ac.signal
+    });
+  }finally{clearTimeout(timeoutId)}
 
   if(!resp.ok){const e=await resp.text();throw new Error(`API ${resp.status}: ${e}`)}
   const data=await resp.json();
   const aiText=data.choices[0].message.content;
 
   const readings=S.chosen.map(s=>({
-    pos:s.pos,card:s.card,rev:s.rev,
-    html:`<p><strong>${s.card.cn}（${s.card.name}）</strong>在${s.pos.label}位置，${s.rev?'逆位':'正位'}。</p>
+    pos:s.pos,card:s.card,rev:s.reversed,
+    html:`<p><strong>${s.card.cn}（${s.card.name}）</strong>在${s.pos.label}位置，${s.reversed?'逆位':'正位'}。</p>
       <p>（AI 在综合解读中详细分析）</p>`
   }));
 
@@ -1516,15 +1743,17 @@ function displayReading(reading){
     const div=document.createElement('div');
     div.className='result-card-item animate-fade-in';
     div.style.animationDelay=(i*.15)+'s';
+    const elC=elColor(c.el);
     div.innerHTML=`
       <div class="rc-card">
+        <div style="position:absolute;top:0;left:25%;right:25%;height:3px;border-radius:0 0 2px 2px;background:${elC};pointer-events:none"></div>
         <div class="rc-num">${c.num}</div>
         <div class="rc-symbol">${c.sym}</div>
         <div class="rc-name-en">${c.name}</div>
         <div class="rc-name-cn">${c.cn}</div>
       </div>
       <div class="rc-pos">${s.pos.icon} ${s.pos.label}</div>
-      <div class="rc-orient">${s.rev?'↕ 逆位':'✨ 正位'}</div>`;
+      <div class="rc-orient-badge ${s.reversed?'reversed':'upright'}">${s.reversed?'↕ 逆位':'✨ 正位'}</div>`;
     container.appendChild(div);
   });
 
@@ -1612,7 +1841,7 @@ renderLib();
 // RESET
 // ============================================================
 function resetAll(){
-  S.chosen=[];S.cards=[];S.reading=null;
+  S.chosen=[];S.cards=[];S.reading=null;S.confirming=false;
   document.getElementById('cardsFan').innerHTML='<div class="sparkle-container"></div>';
   document.getElementById('interpArea').innerHTML='';
   document.getElementById('confirmBtn').disabled=true;
@@ -1632,6 +1861,13 @@ function resetAll(){
 document.addEventListener('keydown',e=>{
   if(e.key==='Escape')document.querySelectorAll('.modal-overlay.show').forEach(m=>{m.classList.remove('show');document.body.style.overflow=''});
 });
+
+// Init magic dust after page loads
+setTimeout(initMagicDust,1000);
+
+// Re-init dust on navigation
+const origTurn=turnTo;
+turnTo=function(t){origTurn(t);setTimeout(initMagicDust,500)};
 
 console.log('🔮 AI 塔罗 · 天命之轮 v2');
 console.log('✨ 翻页式体验 · 沉浸卡牌选择 · DeepSeek AI');
